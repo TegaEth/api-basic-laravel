@@ -13,7 +13,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        //listing out all the students in the database
+        return response()->json(Student::all());
     }
 
     /**
@@ -21,15 +22,28 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:80',
+            'email' => 'required|email|unique:students,email',
+            'gender' => 'required|in:male,female,other'
+        ]);
+
+        Student::create($data);
+        return response()->json([
+            'message' => 'Student created successfully',
+        "status" => true]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Student $student)
     {
-        //
+        return response()->json([
+            "status" => true,
+            "message" => "Student retrieved successfully",
+            "data" => $student
+        ]);
     }
 
     /**
