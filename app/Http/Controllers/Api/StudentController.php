@@ -49,16 +49,34 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Student $student)
     {
-        //
+        $request->validate([
+            "name" => 'sometimes|required|string|max:80',
+            "email" => 'sometimes|email|unique:students,email',
+            "gender" => 'sometimes|in:male,female,other'
+        ]);
+
+        //print_r($request->all());
+
+        $student->update($request->all());
+        
+        return response()->json([
+            'message' => 'Student updated successfully',
+            "status" => true,
+            "data" => $student
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Student $student)
     {
-        //
+        $student->delete();
+        return response()->json([
+            'message' => 'Student deleted successfully',
+            "status" => true
+        ]);
     }
 }
